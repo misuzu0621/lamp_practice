@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <!-- head.php 読み込み -->
   <?php include VIEW_PATH . 'templates/head.php'; ?>
   <title>商品管理</title>
+  <!-- admin.css 読み込み -->
   <link rel="stylesheet" href="<?php print(STYLESHEET_PATH . 'admin.css'); ?>">
 </head>
 <body>
+  <!-- header_logined.php 読み込み -->
   <?php 
   include VIEW_PATH . 'templates/header_logined.php'; 
   ?>
@@ -13,8 +16,10 @@
   <div class="container">
     <h1>商品管理</h1>
 
+    <!-- messages.php 読み込み -->
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
+    <!-- form admin_insert_item.php へ -->
     <form 
       method="post" 
       action="admin_insert_item.php" 
@@ -48,6 +53,7 @@
     </form>
 
 
+    <!-- $itemsの数が0より多いとき -->
     <?php if(count($items) > 0){ ?>
       <table class="table table-bordered text-center">
         <thead class="thead-light">
@@ -60,12 +66,15 @@
           </tr>
         </thead>
         <tbody>
+          <!-- $itemsを繰り返す -->
           <?php foreach($items as $item){ ?>
+          <!-- $item['status']===1 の結果がtrueのとき''、falseのとき'close_item' をprint -->
           <tr class="<?php print(is_open($item) ? '' : 'close_item'); ?>">
             <td><img src="<?php print(IMAGE_PATH . $item['image']);?>" class="item_image"></td>
             <td><?php print($item['name']); ?></td>
             <td><?php print(number_format($item['price'])); ?>円</td>
             <td>
+              <!-- form admin_change_stock.php へ -->
               <form method="post" action="admin_change_stock.php">
                 <div class="form-group">
                   <!-- sqlインジェクション確認のためあえてtext -->
@@ -78,10 +87,13 @@
             </td>
             <td>
 
+              <!-- form admin_change_status.php へ -->
               <form method="post" action="admin_change_status.php" class="operation">
+                <!-- $item['status']が1(公開)のとき -->
                 <?php if(is_open($item) === true){ ?>
                   <input type="submit" value="公開 → 非公開" class="btn btn-secondary">
                   <input type="hidden" name="changes_to" value="close">
+                <!-- $item['status']が1でない(非公開)とき -->
                 <?php } else { ?>
                   <input type="submit" value="非公開 → 公開" class="btn btn-secondary">
                   <input type="hidden" name="changes_to" value="open">
@@ -89,6 +101,7 @@
                 <input type="hidden" name="item_id" value="<?php print($item['item_id']); ?>">
               </form>
 
+              <!-- form admin_delete_item.php へ -->
               <form method="post" action="admin_delete_item.php">
                 <input type="submit" value="削除" class="btn btn-danger delete">
                 <input type="hidden" name="item_id" value="<?php print($item['item_id']); ?>">
@@ -99,11 +112,13 @@
           <?php } ?>
         </tbody>
       </table>
+    <!-- $itemsの数が0のとき -->
     <?php } else { ?>
       <p>商品はありません。</p>
     <?php } ?> 
   </div>
   <script>
+    // .delete要素をクリックしたとき、confirmダイアログを表示
     $('.delete').on('click', () => confirm('本当に削除しますか？'))
   </script>
 </body>

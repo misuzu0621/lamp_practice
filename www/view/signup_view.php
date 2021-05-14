@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <!-- head.php 読み込み -->
   <?php include VIEW_PATH . 'templates/head.php'; ?>
   <title>サインアップ</title>
+  <!--signup.css 読み込み -->
   <link rel="stylesheet" href="<?php print(STYLESHEET_PATH . 'signup.css'); ?>">
 </head>
 <body>
+<!-- header.php 読み込み -->
   <?php include VIEW_PATH . 'templates/header.php'; ?>
   <div class="container">
     <h1>ユーザー登録</h1>
 
+    <!-- messages.php 読み込み -->
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
+    <!-- form signup_process.php へ -->
     <form method="post" action="signup_process.php" class="signup_form mx-auto">
       <div class="form-group">
         <label for="name">名前: </label>
