@@ -26,11 +26,12 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
   ";
-
+  // パラメータを取得
+  $params = array($item_id);
   // SQL文を実行してレコードを取得し返す、例外発生時falseを返す
-  return fetch_query($db, $sql);
+  return fetch_query($db, $sql, $params);
 }
 
 /**
@@ -160,11 +161,12 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
         image,
         status
       )
-    VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
+    VALUES(?, ?, ?, ?, ?);
   ";
-
+  // パラメータを取得
+  $params = array($name, $price, $stock, $filename, $status_value);
   // SQL文の実行結果を返す
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, $params);
 }
 
 /**
@@ -180,14 +182,15 @@ function update_item_status($db, $item_id, $status){
     UPDATE
       items
     SET
-      status = {$status}
+      status = ?
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
-  
+  // パラメータを取得
+  $params = array($status, $item_id);
   // SQL文の実行結果を返す
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, $params);
 }
 
 /**
@@ -203,14 +206,15 @@ function update_item_stock($db, $item_id, $stock){
     UPDATE
       items
     SET
-      stock = {$stock}
+      stock = ?
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
-  
+  // パラメータを取得
+  $params = array($stock, $item_id);
   // SQL文の実行結果を返す
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, $params);
 }
 
 /**
@@ -256,12 +260,13 @@ function delete_item($db, $item_id){
     DELETE FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
-  
+  // パラメータを取得
+  $params = array($item_id);
   // SQL文の実行結果を返す
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, $params);
 }
 
 
