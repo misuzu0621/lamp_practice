@@ -31,5 +31,9 @@ if(is_admin($user) === false){
 
 // 商品データ取得(二次元連想配列)
 $items = get_all_items($db);
+
+// トークンの生成
+$token = get_csrf_token();
+
 // viewファイル読み込み
 include_once VIEW_PATH . '/admin_view.php';

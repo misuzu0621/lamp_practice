@@ -312,3 +312,42 @@ function h($str) {
   // 特殊文字をHTMLエンティティに変換して返す
   return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
+
+/**
+ * トークンの生成
+ * @return str   $token トークン
+ */
+function get_csrf_token() {
+  // 30文字のランダムな文字列を取得
+  $token = get_random_string(30);
+  // $_SESSION['csrf_token']に$tokenを代入
+  set_session('csrf_token', $token);
+  // $tokenを返す
+  return $token;
+}
+
+/**
+ * トークンのチェック
+ * @param  str   $token フォームから送られたトークン
+ * @return bool
+ */
+function is_valid_csrf_token($token) {
+  // $tokenが''のとき
+  if ($token === '') {
+    // falseを返す
+    return false;
+  }
+  // $tokenと$_SESSION['csrf_token']が等しいかの結果を返す
+  return $token === get_session('csrf_token');
+}
+
+/**
+ * トークンの破棄
+ * @param  str   $token フォームから送られたトークン
+ */
+function delete_csrf_token($token) {
+  // $tokenを破棄
+  unset($token);
+  // $_SESSION['csrf_token']を破棄
+  unset($_SESSION['csrf_token']);
+}

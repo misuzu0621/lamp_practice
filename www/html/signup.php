@@ -13,6 +13,9 @@ if(is_logined() === true){
   redirect_to(HOME_URL);
 }
 
+// トークンの生成
+$token = get_csrf_token();
+
 // viewファイル読み込み
 include_once VIEW_PATH . 'signup_view.php';
 

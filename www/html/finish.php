@@ -13,6 +13,16 @@ require_once MODEL_PATH . 'cart.php';
 // セッション開始
 session_start();
 
+// $_POST['token']を取得
+$token = get_post('token');
+// トークンが正しくないとき
+if (is_valid_csrf_token($token) === false) {
+  // ログインページへ
+  redirect_to(LOGIN_URL);
+}
+// トークンの破棄
+delete_csrf_token($token);
+
 // ログイン済でないとき
 if(is_logined() === false){
   // ログインページへ
