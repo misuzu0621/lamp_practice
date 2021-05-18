@@ -168,10 +168,10 @@ function delete_cart($db, $cart_id){
 }
 
 /**
- * カート商品チェックをし、カートデータを削除
+ * 商品購入
  * @param  obj   $db    DBハンドル
  * @param  array $carts
- * @return bool  false
+ * @return bool
  */
 function purchase_carts($db, $carts){
   // カート商品チェックが成功でないとき
@@ -179,8 +179,16 @@ function purchase_carts($db, $carts){
     // falseを返す
     return false;
   }
+  // トランザクション開始
+  $db->beginTransaction();
+  // 購入履歴登録
+  insert_orders($db, $carts[0]['user_id']);
+  // order_id取得
+  $order_id = $db->lastInsertId();
   // $carts繰り返し
   foreach($carts as $cart){
+    // 購入明細登録
+    insert_order_details($db, $order_id, $cart['item_id'], $cart['price'], $cart['amount']);
     // 在庫数の更新が成功でないとき
     if(update_item_stock(
         $db, 
@@ -191,9 +199,21 @@ function purchase_carts($db, $carts){
       set_error($cart['name'] . 'の購入に失敗しました。');
     }
   }
-  
   // カートデータ削除
   delete_user_carts($db, $carts[0]['user_id']);
+  // エラーメッセージがないとき
+  if (get_errors() === array()) {
+    // コミット処理
+    $db->commit();
+    // trueを返す
+    return true;
+  // エラーメッセージがあるとき
+  } else {
+    // ロールバック処理
+    $db->rollBack();
+    // falseを返す
+    return false;
+  }
 }
 
 /**
@@ -268,3 +288,42 @@ function validate_cart_purchase($carts){
   return true;
 }
 
+/**
+ * 購入履歴登録
+ * @param  obj   $db      DBハンドル
+ * @param  str   $user_id ユーザID
+ */
+function insert_orders($db, $user_id) {
+  // SQL文
+  $sql = "
+    INSERT INTO orders
+      (user_id)
+    VALUES
+      (?)
+  ";
+  // 入力値の配列
+  $params = array($user_id);
+  // SQL文を実行
+  execute_query($db, $sql, $params);
+}
+
+/**
+ * 購入明細登録
+ * @param  obj   $db      DBハンドル
+ * @param  int   $item_id 商品ID
+ * @param  int   $price   購入時の価格
+ * @param  int   $amount  購入数
+ */
+function insert_order_details($db, $order_id, $item_id, $price, $amount) {
+  // SQL文
+  $sql = "
+    INSERT INTO order_details
+      (order_id, item_id, price, amount)
+    VALUES
+      (?, ?, ?, ?)
+  ";
+  // 入力値の配列
+  $params = array($order_id, $item_id, $price, $amount);
+  // SQL文を実行
+  execute_query($db, $sql, $params);
+}

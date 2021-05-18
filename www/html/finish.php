@@ -37,7 +37,7 @@ $user = get_login_user($db);
 // カートデータ取得(二次元連想配列)
 $carts = get_user_carts($db, $user['user_id']);
 
-// カートデータ削除が成功でないとき
+// 商品購入が成功でないとき
 if(purchase_carts($db, $carts) === false){
   // セッション変数にエラーメッセージを追加
   set_error('商品が購入できませんでした。');
