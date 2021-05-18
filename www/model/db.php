@@ -92,6 +92,7 @@ function execute_query($db, $sql, $params = array()){
   }catch(PDOException $e){
     // セッション変数にエラーメッセージを追加
     set_error('更新に失敗しました。');
+    throw $e;
   }
   // falseを返す
   return false;

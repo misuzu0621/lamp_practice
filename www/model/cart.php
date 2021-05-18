@@ -210,8 +210,6 @@ function purchase_carts($db, $carts){
   } catch (PDOException $e) {
     // ロールバック処理
     $db->rollBack();
-    // セッション変数にエラーメッセージを追加
-    set_session($e->getMessage());
     // falseを返す
     return false;
   }
