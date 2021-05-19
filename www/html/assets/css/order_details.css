@@ -1,0 +1,11 @@
+h2 {
+  display: flex;
+  font-size: 120%;
+  font-weight: normal;
+}
+h2>p {
+  padding: 0 10px;
+}
+th, td {
+  text-align: center;
+}
