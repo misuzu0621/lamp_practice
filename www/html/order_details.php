@@ -38,10 +38,10 @@ $user = get_login_user($db);
 $order_id = get_post('order_id');
 
 // 購入履歴データを取得(連想配列)
-$order = get_order($db, $order_id);
+$order = get_order($db, $order_id, $user);
 
 // 購入明細データを取得(二次元連想配列)
-$order_details = get_order_details($db, $order_id);
+$order_details = get_order_details($db, $order_id, $user);
 
 // viewファイル読み込み
 include_once VIEW_PATH . 'order_details_view.php';

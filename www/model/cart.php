@@ -372,10 +372,11 @@ function get_orders($db, $user) {
  * 購入履歴取得
  * @param  obj   $db       DBハンドル
  * @param  str   $order_id 注文ID
+ * @param  array $user     ユーザデータ
  * @return array 購入履歴データ(連想配列)
  * @return bool  false
  */
-function get_order($db, $order_id) {
+function get_order($db, $order_id, $user) {
   // SQL文
   $sql = "
     SELECT
@@ -388,10 +389,22 @@ function get_order($db, $order_id) {
       ON orders.order_id = order_details.order_id
     WHERE
       orders.order_id =?
-    GROUP BY orders.order_id
   ";
   // 入力値の配列を設定
   $params = array($order_id);
+  // 管理者でないとき
+  if (is_admin($user) === false) {
+    // SQL文追加
+    $sql .= "
+      AND orders.user_id = ?
+    ";
+    // 入力値の配列を追加
+    $params[] = $user['user_id'];
+  }
+  // SQL文追加
+  $sql .= "
+    GROUP BY orders.order_id
+  ";
   // SQL文を実行してレコードを取得し返す、例外発生時falseを返す
   return fetch_query($db, $sql, $params);
 }
@@ -400,10 +413,11 @@ function get_order($db, $order_id) {
  * 購入明細取得
  * @param  obj   $db       DBハンドル
  * @param  str   $order_id 注文ID
+ * @param  array $user     ユーザデータ
  * @return array 購入明細データ(二次元連想配列)
  * @return bool  false
  */
-function get_order_details($db, $order_id) {
+function get_order_details($db, $order_id, $user) {
   // SQL文
   $sql = "
     SELECT
@@ -415,12 +429,26 @@ function get_order_details($db, $order_id) {
       order_details
       INNER JOIN items
       ON order_details.item_id = items.item_id
+      INNER JOIN orders
+      ON order_details.order_id = orders.order_id
     WHERE
       order_details.order_id = ?
-    GROUP BY order_details.order_detail_id
     ";
   // 入力値の配列
   $params = array($order_id);
+  // 管理者でないとき
+  if (is_admin($user) === false) {
+    // SQL文追加
+    $sql .= "
+      AND orders.user_id = ?
+    ";
+    // 入力値の配列を追加
+    $params[] = $user['user_id'];
+  }
+  // SQL文追加
+  $sql .= "
+    GROUP BY order_details.order_detail_id
+  ";
   // SQL文を実行してレコードを取得し返す、例外発生時falseを返す
   return fetch_all_query($db, $sql, $params);
 }
