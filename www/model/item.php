@@ -38,10 +38,11 @@ function get_item($db, $item_id){
  * 商品データ取得(二次元連想配列)
  * @param  obj   $db DBハンドル
  * @param  bool  $is_open = false
+ * @param  str   $sort 並べ替え
  * @return array 商品データ(二次元連想配列)
  * @return bool  false
  */
-function get_items($db, $is_open = false){
+function get_items($db, $is_open = false, $sort = 'old'){
   // SQL文
   $sql = '
     SELECT
@@ -60,7 +61,25 @@ function get_items($db, $is_open = false){
       WHERE status = 1
     ';
   }
-
+  // 並び替え未選択または新着順選択のとき
+  if ($sort === '' || $sort === 'new') {
+    // SQL文追加
+    $sql .= "
+      ORDER BY created DESC
+    ";
+  // 価格の安い順のとき
+  } else if ($sort === 'low_price') {
+    // SQL文追加
+    $sql .= "
+      ORDER BY price ASC
+    ";
+  // 価格の高い順のとき
+  } else if ($sort === 'high_price') {
+    // SQL文追加
+    $sql .= "
+      ORDER BY price DESC
+    ";
+  }
   // SQLを実行してレコードを取得し返す、例外発生時falseを返す
   return fetch_all_query($db, $sql);
 }
@@ -78,12 +97,13 @@ function get_all_items($db){
 /**
  * ステータスが公開の商品データ取得(二次元連想配列)
  * @param  obj   $db DBハンドル
+ * @param  str   $sort 並べ替え
  * @return array ステータスが公開の商品データ(二次元連想配列)
  * @return bool  false
  */
-function get_open_items($db){
+function get_open_items($db, $sort){
   // ステータスが公開の商品データを取得して返す(二次元連想配列)、例外発生時falseを返す
-  return get_items($db, true);
+  return get_items($db, true, $sort);
 }
 
 /**

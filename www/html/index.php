@@ -22,8 +22,11 @@ $db = get_db_connect();
 // ログインユーザデータ取得(連想配列)
 $user = get_login_user($db);
 
+// $_GET['sort']を取得
+$sort = get_get('sort');
+
 // ステータスが公開の商品データ取得(二次元連想配列)
-$items = get_open_items($db);
+$items = get_open_items($db, $sort);
 
 // トークンの生成
 $token = get_csrf_token();

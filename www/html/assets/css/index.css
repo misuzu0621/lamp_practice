@@ -1,4 +1,10 @@
 .item {
   margin-top: 10px;
 }
-
+.sort {
+  float: right;
+  margin-bottom: 20px;
+}
+.items {
+  clear: both;
+}
