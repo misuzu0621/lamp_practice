@@ -16,7 +16,16 @@
     <h1>商品一覧</h1>
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
-    <div class="card-deck">
+    <form method="get" action="#" class="form-inline sort">
+      <select name="sort" class="form-control">
+        <option value="new" <?php if ($sort === '' || $sort === 'new') { print 'selected'; } ?>>新着順</option>
+        <option value="low_price" <?php if ($sort === 'low_price') { print 'selected'; } ?>>価格の安い順</option>
+        <option value="high_price" <?php if ($sort === 'high_price') { print 'selected'; } ?>>価格の高い順</option>
+      </select>
+      <input type="submit" value="並べ替え" class="btn btn-outline-secondary">
+    </form>
+
+    <div class="card-deck items">
       <div class="row">
       <!-- $items を繰り返す -->
       <?php foreach($items as $item){ ?>
