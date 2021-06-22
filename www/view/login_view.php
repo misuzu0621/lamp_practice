@@ -5,7 +5,7 @@
   <?php include VIEW_PATH . 'templates/head.php'; ?>
   <title>ログイン</title>
   <!-- login.css 読み込み -->
-  <link rel="stylesheet" href="<?php print(STYLESHEET_PATH . 'login.css'); ?>">
+  <link rel="stylesheet" href="<?php print(STYLESHEET_PATH . 'login2.css'); ?>">
 </head>
 <body>
   <!-- header.php 読み込み -->
@@ -29,6 +29,12 @@
       <input type="submit" value="ログイン" class="btn btn-primary">
       <input type="hidden" name="token" value="<?php print($token); ?>">
     </form>
+
+    <div class="alert alert-primary text-center col-8 offset-2 user" role="alert">
+      ↑ こちらのアカウントでもログイン出来ます ↑<br>
+      名前　　　：sampleuser<br>
+      パスワード：password &ensp;
+    </div>
   </div>
 </body>
 </html>
